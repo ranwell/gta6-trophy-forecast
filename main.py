@@ -4,7 +4,7 @@
 # snapshot of ~600 early players, so reads before LAUNCH_SKIP_H hours are ignored once later ones exist), fit
 # logit(rate) against ln(hours since launch) by weighted least squares over the last FIT_WINDOW_H hours, and
 # extrapolate the damped slope to the target. The spread on the logit scale combines a random walk, the
-# extrapolation's own size (the further we move, the less sure we are) and the fit's residual.
+# extrapolation's own size (the further we move, the less sure we are) and the fit's residual, never below SD_MIN.
 
 import json
 import math
@@ -23,6 +23,7 @@ FIT_WINDOW_H = 30  # fit on the last this-many hours of refreshes
 DAMP = 0.75  # growth in ln(time) slows as the launch crowd settles
 WALK = 0.3  # logit units per sqrt(day)
 MOVE_UNC = 0.45  # share of the predicted move that is uncertain
+SD_MIN = 0.15  # logit spread floor: a flat history is no proof the next refresh is flat too
 SLOPE_MIN, SLOPE_MAX = -2.0, 4.0
 
 
@@ -75,7 +76,7 @@ def forecast(c):
             resid = math.sqrt(sum(wk * (y - my - slope * (x - mx)) ** 2 for wk, (x, y) in zip(w, pts)) / sw)
         move = DAMP * slope * dx
         mid = logit(last_rate) + move
-        sd = math.sqrt(WALK ** 2 * days + (MOVE_UNC * move) ** 2 + resid ** 2)
+        sd = max(SD_MIN, math.sqrt(WALK ** 2 * days + (MOVE_UNC * move) ** 2 + resid ** 2))
         rows.append({'id': t['id'], 'q': [round(100 / (1 + math.exp(-(mid + z * sd))), 4) for z in Z]})
     return rows
 
