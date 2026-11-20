@@ -62,8 +62,9 @@ def forecast(c):
         last_rate = next((rate(r) for r in reversed(c['history']) if rate(r) is not None), 0.5)
         slope = resid = 0.0
         if len(pts) >= 3:
-            # Weighted least squares, later refreshes weigh more.
-            w = [1 + k / len(pts) for k in range(len(pts))]
+            # Weighted least squares: weight decays with hours before the last read, so a burst of
+            # refreshes in one hour counts no more than its time span (Exophase refreshes irregularly).
+            w = [math.exp((math.exp(x) - t_last) / FIT_WINDOW_H) for x, _ in pts]
             sw = sum(w)
             mx = sum(wk * x for wk, (x, _) in zip(w, pts)) / sw
             my = sum(wk * y for wk, (_, y) in zip(w, pts)) / sw
