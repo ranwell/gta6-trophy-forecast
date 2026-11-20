@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/gta6-trophy-rarity-forecast-01/ranwell/gta6-trophy-forecast/rank.svg)](https://make.fun/bounty/gta6-trophy-rarity-forecast-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-trophy-rarity-forecast-01)
 [![reward](https://make.fun/badge/gta6-trophy-rarity-forecast-01/ranwell/gta6-trophy-forecast/reward.svg)](https://make.fun/bounty/gta6-trophy-rarity-forecast-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-trophy-rarity-forecast-01)
 
-Forecasts each Grand Theft Auto VI PS5 trophy's Exophase earn rate at the end of launch week as five quantiles: a damped logit-vs-log-time trend fitted to the post-launch-night refreshes, with a spread that grows with the horizon and the size of the predicted move.
+Forecasts each Grand Theft Auto VI PS5 trophy's Exophase earn rate at the end of launch week as five quantiles. It splits each rate into earners and players tracked (earners only grow, new players dilute every rate), and forecasts trophies almost nobody holds yet from how fast the case's own rare trophies stopped being rare.
 
 ## Run it
 
